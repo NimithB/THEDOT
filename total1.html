@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Layout</title>
+    <style>
+        /* Make sure the body takes up the full height of the viewport */
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s; /* Smooth transition for background color */
+            background-color: #f0f0f0; /* Light gray background */
+        }
+
+        /* Position the top buttons at the top of the page */
+        .top-buttons {
+            position: absolute;
+            top: 20px; /* Add a slight margin from the top */
+            display: flex;
+            justify-content: center;
+            width: 100%; /* Make the div full width to center the buttons */
+        }
+
+        /* Center the middle buttons vertically and horizontally */
+        .middle-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* Allow buttons to wrap to next line */
+            margin-top: 50px; /* Space between top buttons and middle buttons */
+        }
+
+        /* Style for all buttons */
+        button {
+            margin: 10px; /* Space around buttons */
+            padding: 30px 50px; /* Increase padding for larger buttons */
+            font-size: 30px; /* Increase font size */
+            cursor: pointer; /* Pointer cursor on hover */
+            background-color: #fff; /* White background */
+            border: none; /* No border */
+            color: #333; /* Dark text color */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft box shadow */
+            transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition for transform and box-shadow */
+        }
+
+        /* Hover effect */
+        button:hover {
+            transform: translateY(-2px); /* Move button slightly up on hover */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Increase box shadow on hover */
+        }
+
+        /* Style for dropdown container */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Style for dropdown content */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        /* Show dropdown content on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Style for dropdown buttons */
+        .dropdown-content button {
+            width: 100%;
+            padding: 10px 20px;
+            background: white;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-buttons">
+        <button id="top-button-1">Male</button>
+        <button id="top-button-2">Female</button>
+    </div>
+    <div class="middle-buttons">
+        <div class="dropdown">
+            <button>Learning Mode</button>
+            <div class="dropdown-content">
+                <button>Beginner</button>
+                <button>Intermediate</button>
+                <button>Advanced</button>
+            </div>
+        </div>
+        <button>Reading Mode</button>
+        <button>Quiz Mode</button>
+        <button onclick="window.location.href = 'https://news.google.com/topics/CAAqKAgKIiJDQkFTRXdvS0wyMHZNREk0TVdOeE1SSUZaVzR0UjBJb0FBUAE?hl=en-IN&gl=IN&ceid=IN%3Aen'">News</button>
+    </div>
+    <script>
+        // Function to change the background color on hover and keep it on click
+        function handleHover(button, color) {
+            button.addEventListener('mouseover', () => {
+                document.body.style.backgroundColor = color;
+            });
+            button.addEventListener('mouseout', () => {
+                if (!button.clicked) {
+                    document.body.style.backgroundColor = '';
+                }
+            });
+            button.addEventListener('click', () => {
+                document.body.style.backgroundColor = color;
+                button.clicked = true;
+            });
+        }
+
+        // Get the buttons
+        const button1 = document.getElementById('top-button-1');
+        const button2 = document.getElementById('top-button-2');
+
+        // Apply the hover and click handlers
+        handleHover(button1, 'lightblue');
+        handleHover(button2, 'rgb(231, 45, 144)');
+    </script>
+</body>
+</html>
