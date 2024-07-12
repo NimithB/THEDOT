@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Page : The Dot-Watson X Powered AI Braille</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: #d3f9d8; /* Light green background */
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center align content */
+        }
+
+        .header {
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px; /* Increased font size */
+            width: 100%; /* Full width */
+        }
+
+        .container {
+            margin-top: 20px; /* Adjust spacing from header */
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 15cm; /* Set width of container */
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;/* Align buttons to the start */
+        }
+        
+        button {
+            margin: 10px 0; /* Adjust button margins */
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: left; /* Left justify text */
+            width: 100%; /* Make button full width */
+        }
+
+        .rectangle {
+            flex: 1;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-top: 20px; /* Spacing from output */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            height: 10cm; /* Adjust height of rectangle */
+            width: 20cm; /* Adjust width of rectangle */
+            position: relative; /* Positioning for image */
+        }
+        
+
+        #braille-image {
+            max-width: 80px; /* Set max width for smaller image */
+            position: absolute; /* Position within rectangle */
+            bottom: 10px; /* Adjust distance from bottom */
+            right: 10px; /* Adjust distance from right */
+        }
+
+        .marquee-container {
+            color: #000; /* Set font color to black */
+            overflow: hidden;
+            white-space: nowrap;
+            box-sizing: border-box;
+            padding: 10px;
+            font-size: 25px; /* Increased font size */
+            width: 100%; /* Full width */
+            margin-top:auto; /* Move marquee to the bottom */
+            text-align: center; /* Center align text */
+        }
+
+        .marquee {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 20s linear infinite; /* Longer animation duration */
+        }
+
+        @keyframes marquee {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        Learning Page - Dot-Watson X Powered AI Braille
+    </div>
+    <div class="container">
+        <div class="buttons">
+            <button id="inputButton" onclick="startListening()">Input (F)</button>
+            <button id="outputButton" onclick="outputQuestion()">Output (J)</button>
+        </div>
+        <div class="rectangle" id="output">
+            Your questions and input will appear here.
+            <img id="braille-image" src="https://th.bing.com/th/id/R.ca75116e681d59d23219814c4dd15f20?rik=qrRY1GRogOnzYQ&riu=http%3a%2f%2fst.depositphotos.com%2f1007989%2f1604%2fi%2f950%2fdepositphotos_16047239-stock-photo-braille-kid.jpg&ehk=9Rax98NfF9vabs7qaAHDEidYBHxZ%2bOnPEP44CGnX0iM%3d&risl=&pid=ImgRaw&r=0" alt="Braille Kid Image">
+        </div>
+    </div>
+    <div class="marquee-container">
+        <div class="marquee">Lighting up minds, one lesson at a time.</div>
+    </div>
+
+    <script>
+        let question = "";
+
+        // Function to start listening for input
+        function startListening() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.start();
+
+            recognition.onresult = function(event) {
+                question = event.results[0][0].transcript;
+                document.getElementById('output').innerText += `\nQuestion: ${question}`;
+            };
+
+            recognition.onerror = function(event) {
+                console.error(event.error);
+                alert('Error occurred in recognition: ' + event.error);
+            };
+        }
+
+        // Function to output the question
+        function outputQuestion() {
+            if (question) {
+                const utterance = new SpeechSynthesisUtterance(question);
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('No question available. Please use the Input button first.');
+            }
+        }
+
+        // Key event listeners
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'f' || event.key === 'F') {
+                startListening();
+            } else if (event.key === 'j' || event.key === 'J') {
+                outputQuestion();
+            }
+        });
+    </script>
+</body>
+</html>
