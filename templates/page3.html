@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Braille Alphabet Teaching</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fff; /* White background */
+            color: #000; /* Black text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .letter {
+            font-size: 100px;
+            margin: 20px 0;
+        }
+
+        .braille {
+            font-size: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            width: 60px;
+            height: 120px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: grey; /* Default color */
+            margin: 5px;
+        }
+
+        .active {
+            background-color: black; /* Active dot color */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="letter" class="letter">A</div>
+        <div id="braille" class="braille">
+            <div class="dot" id="dot1"></div>
+            <div class="dot" id="dot2"></div>
+            <div class="dot" id="dot3"></div>
+            <div class="dot" id="dot4"></div>
+            <div class="dot" id="dot5"></div>
+            <div class="dot" id="dot6"></div>
+        </div>
+    </div>
+
+    <script>
+        const alphabet = [
+            { letter: 'A', braille: [1] },
+            { letter: 'B', braille: [1, 2] },
+            { letter: 'C', braille: [1, 4] },
+            { letter: 'D', braille: [1, 4, 5] },
+            { letter: 'E', braille: [1, 5] },
+            { letter: 'F', braille: [1, 2, 4] },
+            { letter: 'G', braille: [1, 2, 4, 5] },
+            { letter: 'H', braille: [1, 2, 5] },
+            { letter: 'I', braille: [2, 4] },
+            { letter: 'J', braille: [2, 4, 5] },
+            { letter: 'K', braille: [1, 3] },
+            { letter: 'L', braille: [1, 2, 3] },
+            { letter: 'M', braille: [1, 3, 4] },
+            { letter: 'N', braille: [1, 3, 4, 5] },
+            { letter: 'O', braille: [1, 3, 5] },
+            { letter: 'P', braille: [1, 2, 3, 4] },
+            { letter: 'Q', braille: [1, 2, 3, 4, 5] },
+            { letter: 'R', braille: [1, 2, 3, 5] },
+            { letter: 'S', braille: [2, 3, 4] },
+            { letter: 'T', braille: [2, 3, 4, 5] },
+            { letter: 'U', braille: [1, 3, 6] },
+            { letter: 'V', braille: [1, 2, 3, 6] },
+            { letter: 'W', braille: [2, 4, 5, 6] },
+            { letter: 'X', braille: [1, 3, 4, 6] },
+            { letter: 'Y', braille: [1, 3, 4, 5, 6] },
+            { letter: 'Z', braille: [1, 3, 5, 6] }
+        ];
+
+        let currentIndex = 0;
+        let preferredVoice;
+
+        const letterDiv = document.getElementById('letter');
+        const dots = Array.from(document.getElementsByClassName('dot'));
+
+        function loadVoices() {
+            const voices = window.speechSynthesis.getVoices();
+            preferredVoice = voices.find(voice => voice.name.includes('Google') || voice.name.includes('Microsoft') || voice.name.includes('Apple'));
+        }
+
+        if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+        } else {
+            loadVoices();
+        }
+
+        // Function to speak text using the preferred voice
+        function speakText(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1;
+            utterance.pitch = 1;
+            utterance.volume = 2;
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function updateBraille(braille) {
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active');
+                if (braille.includes(index + 1)) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+
+        function showNextLetter() {
+            if (currentIndex < alphabet.length) {
+                const { letter, braille } = alphabet[currentIndex];
+                letterDiv.textContent = letter;
+                updateBraille(braille);
+                speakText(letter);
+                currentIndex++;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showNextLetter();
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key.toLowerCase() === 'j') {
+                showNextLetter();
+            }
+        });
+    </script>
+</body>
+</html>

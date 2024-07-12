@@ -3,131 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Button Layout</title>
+    <title>Dot-Watson X Powered AI Braille</title>
     <style>
-        /* Make sure the body takes up the full height of the viewport */
         body {
+            font-style: italic;
+            background-color: #d3f9d8; /* Light green background */
             margin: 0;
+            padding: 0;
             height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            justify-content: space-between;
+            width: 100%;
+            height: 100%;
+            max-width: 1600px;
+        }
+
+        .image-container {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .text-container {
+            flex: 1;
+            background-color: #d3f9d8; /* Light green background */
+            text-align: center; /* Center align text */
+            padding: 30px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
-            transition: background-color 0.3s; /* Smooth transition for background color */
-            background-color: #f0f0f0; /* Light gray background */
         }
 
-        /* Position the top buttons at the top of the page */
-        .top-buttons {
-            position: absolute;
-            top: 20px; /* Add a slight margin from the top */
-            display: flex;
-            justify-content: center;
-            width: 100%; /* Make the div full width to center the buttons */
+        .text-container h1, .text-container h2 {
+            color: #000; /* Black text */
+            font-weight: bold;
         }
 
-        /* Center the middle buttons vertically and horizontally */
-        .middle-buttons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap; /* Allow buttons to wrap to next line */
-            margin-top: 50px; /* Space between top buttons and middle buttons */
+        .text-container h1 {
+            font-size: 40px; /* Increased font size */
         }
 
-        /* Style for all buttons */
-        button {
-            margin: 10px; /* Space around buttons */
-            padding: 30px 50px; /* Increase padding for larger buttons */
-            font-size: 30px; /* Increase font size */
-            cursor: pointer; /* Pointer cursor on hover */
-            background-color: #fff; /* White background */
-            border: none; /* No border */
-            color: #333; /* Dark text color */
-            border-radius: 8px; /* Rounded corners */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft box shadow */
-            transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition for transform and box-shadow */
+        .text-container h2 {
+            font-size: 30px; /* Adjusted font size */
+            margin-top: 10px; /* Added margin top */
         }
 
-        /* Hover effect */
-        button:hover {
-            transform: translateY(-2px); /* Move button slightly up on hover */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Increase box shadow on hover */
+        .text-container p {
+            margin-top: 20px; /* Adjusted margin */
+            color: #000; /* Black text */
+            font-size: 25px;
+            font-style: italic;
         }
 
-        /* Style for dropdown container */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        /* Style for dropdown content */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: white;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-
-        /* Show dropdown content on hover */
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        /* Style for dropdown buttons */
-        .dropdown-content button {
-            width: 100%;
-            padding: 10px 20px;
-            background: white;
-            border: none;
-            text-align: left;
+        .text-container button {
+            margin-top: 20px; /* Adjusted margin */
+            padding: 10px 20px; /* Adjusted padding */
+            font-size: 20px;
+            background-color: #000;
+            color: #fff;
             cursor: pointer;
+            width: fit-content; /* Set width to fit its content */
+            box-sizing: border-box; /* Include padding and border in the button's total width */
+            text-align: center; /* Center the text horizontally */
+            margin: 0 auto; /* Center the button horizontally */
+        }
+
+        .punchline {
+            margin-top: auto; /* Pushed to the bottom */
+            font-size: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="top-buttons">
-        <button id="top-button-1">Male</button>
-        <button id="top-button-2">Female</button>
-    </div>
-    <div class="middle-buttons">
-        <div class="dropdown">
-            <button>Learning Mode</button>
-            <div class="dropdown-content">
-                <button>Beginner</button>
-                <button>Intermediate</button>
-                <button>Advanced</button>
-            </div>
+    <div class="container">
+        <div class="image-container">
+            <img src="D:\ibm\THEDOT\templates\image1.jpg" alt="3D Model">
         </div>
-        <button>Reading Mode</button>
-        <button>Quiz Mode</button>
-        <button onclick="window.location.href = 'https://news.google.com/topics/CAAqKAgKIiJDQkFTRXdvS0wyMHZNREk0TVdOeE1SSUZaVzR0UjBJb0FBUAE?hl=en-IN&gl=IN&ceid=IN%3Aen'">News</button>
+        <div class="text-container">
+            <h1>Welcome to</h1>
+            <h2>THE DOT-<br>Watson X Powered AI Braille</h2>
+            <button id="connectButton">Connect</button>
+            <p class="punchline">Venture into the world where darkness unfolds into spectrum of endless possibilities</p>
+        </div>
     </div>
+
     <script>
-        // Function to change the background color on hover and keep it on click
-        function handleHover(button, color) {
-            button.addEventListener('mouseover', () => {
-                document.body.style.backgroundColor = color;
-            });
-            button.addEventListener('mouseout', () => {
-                if (!button.clicked) {
-                    document.body.style.backgroundColor = '';
-                }
-            });
-            button.addEventListener('click', () => {
-                document.body.style.backgroundColor = color;
-                button.clicked = true;
-            });
-        }
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'j') {
+                // Find the button by its ID
+                var connectButton = document.getElementById('connectButton');
+                
+                // Simulate a click on the button
+                connectButton.click();
 
-        // Get the buttons
-        const button1 = document.getElementById('top-button-1');
-        const button2 = document.getElementById('top-button-2');
-
-        // Apply the hover and click handlers
-        handleHover(button1, 'lightblue');
-        handleHover(button2, 'rgb(231, 45, 144)');
+                // Redirect to the next page (replace with your actual URL)
+                window.location.href = 'page2.html';
+            }
+        });
     </script>
 </body>
 </html>
