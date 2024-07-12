@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Layout</title>
+    <style>
+        /* Make sure the body takes up the full height of the viewport */
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s; /* Smooth transition for background color */
+            background-color: #f3efefd5; /* Light gray background */
+        }
+
+        /* Position the top buttons at the top of the page */
+        .top-buttons {
+            position: absolute;
+            top: 20px; /* Add a slight margin from the top */
+            display: flex;
+            justify-content: center;
+            width: 100%; /* Make the div full width to center the buttons */
+        }
+
+        /* Center the middle buttons vertically and horizontally */
+        .middle-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* Allow buttons to wrap to next line */
+            margin-top: 50px; /* Space between top buttons and middle buttons */
+        }
+
+        /* Style for all buttons */
+        button {
+            margin: 10px; /* Space around buttons */
+            padding: 30px 50px; /* Increase padding for larger buttons */
+            font-size: 30px; /* Increase font size */
+            cursor: pointer; /* Pointer cursor on hover */
+            background-color: #fff; /* White background */
+            border: none; /* No border */
+            color: #333; /* Dark text color */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft box shadow */
+            transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition for transform and box-shadow */
+        }
+
+        /* Hover effect */
+        button:hover {
+            transform: translateY(-2px); /* Move button slightly up on hover */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Increase box shadow on hover */
+        }
+
+        /* Style for dropdown container */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Style for dropdown content */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        /* Show dropdown content on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Style for dropdown buttons */
+        .dropdown-content button {
+            width: 100%;
+            padding: 10px 20px;
+            background: white;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        /* Show dropdown content when focused */
+        .dropdown:focus-within .dropdown-content {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-buttons">
+        <button id="top-button-1">Male</button>
+        <button id="top-button-2">Female</button>
+    </div>
+    <div class="middle-buttons">
+        <div class="dropdown">
+            <button id="learning-mode-button" onclick="window.location.href='page3.html'">Learning Mode</button>
+            <!-- <div class="dropdown-content">
+                <button>Beginner</button>
+                <button>Intermediate</button>
+                <button>Advanced</button>
+            </div> -->
+        </div>
+        <button>Reading Mode</button>
+        <button>Quiz Mode</button>
+        <button id="news-button">News</button>
+    </div>
+    <script>
+        // Preload voices and select a human-like voice
+        let preferredVoice;
+        function loadVoices() {
+            const voices = window.speechSynthesis.getVoices();
+            preferredVoice = voices.find(voice => voice.name.includes('Google') || voice.name.includes('Microsoft') || voice.name.includes('Apple'));
+        }
+        
+        if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+        } else {
+            loadVoices();
+        }
+
+        // Function to speak text using the preferred voice
+        function speakText(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Function to change the background color on hover and keep it on click
+        function handleHover(button, color) {
+            button.addEventListener('mouseover', () => {
+                document.body.style.backgroundColor = color;
+            });
+            button.addEventListener('mouseout', () => {
+                if (!button.clicked) {
+                    document.body.style.backgroundColor = '';
+                }
+            });
+            button.addEventListener('click', () => {
+                document.body.style.backgroundColor = color;
+                button.clicked = true;
+            });
+        }
+
+        // Get the buttons
+        const button1 = document.getElementById('top-button-1');
+        const button2 = document.getElementById('top-button-2');
+
+        // Apply the hover and click handlers
+        handleHover(button1, 'lightblue');
+        handleHover(button2, 'rgb(231, 45, 144)');
+
+        // Navigation and selection logic
+        let buttons = document.querySelectorAll('button');
+        let currentIndex = 0;
+
+        // Highlight the first button initially
+        buttons[currentIndex].focus();
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'f') {
+                // Move backward
+                currentIndex = (currentIndex > 0) ? currentIndex - 1 : buttons.length - 1;
+                buttons[currentIndex].focus();
+                speakText(buttons[currentIndex].innerText || buttons[currentIndex].textContent);
+            } else if (event.key === 'j') {
+                // Move forward
+                currentIndex = (currentIndex < buttons.length - 1) ? currentIndex + 1 : 0;
+                buttons[currentIndex].focus();
+                speakText(buttons[currentIndex].innerText || buttons[currentIndex].textContent);
+            } else if (event.key === 'g') {
+                // Simulate button click and announce selection
+                buttons[currentIndex].click();
+                speakText(`${buttons[currentIndex].innerText || buttons[currentIndex].textContent} is selected`);
+            }
+        });
+
+        // Text-to-Speech for the News button
+        const newsButton = document.getElementById('news-button');
+
+        newsButton.addEventListener('click', () => {
+            const newsText = "Let's hear the top news stories for today. " +
+                "(Indian Headlines: Supreme Court grants interim bail to Arvind Kejriwal in PMLA case, refers plea challenging ED arrest to larger bench. " +
+                "World news: Joe Biden mistakenly introduces Ukraine President Zelensky as 'President Putin' during a press conference. " +
+                "Business news: TCS and Infosys power D-Street to fresh record highs! Sensex soars 900 points, Nifty tops 24,500 for the first time. " +
+                "Technology news: Generative AI textbooks are making their way into colleges, offering new educational possibilities.)";
+
+            speakText(newsText);
+        });
+
+        // Text-to-Speech for button hover
+        buttons.forEach(button => {
+            button.addEventListener('mouseover', () => {
+                speakText(button.innerText || button.textContent);
+            });
+        });
+    </script>
+</body>
+</html>
