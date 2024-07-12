@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Braille Alphabet Teaching</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fff; /* White background */
+            color: #000; /* Black text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .letter {
+            font-size: 100px;
+            margin: 20px 0;
+        }
+
+        .braille {
+            font-size: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            width: 60px;
+            height: 120px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: grey; /* Default color */
+            margin: 5px;
+        }
+
+        .active {
+            background-color: black; /* Active dot color */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="letter" class="letter">A</div>
+        <div id="braille" class="braille">
+            <div class="dot" id="dot1"></div>
+            <div class="dot" id="dot2"></div>
+            <div class="dot" id="dot3"></div>
+            <div class="dot" id="dot4"></div>
+            <div class="dot" id="dot5"></div>
+            <div class="dot" id="dot6"></div>
+        </div>
+    </div>
+
+    <script>
+        const alphabet = [
+            { letter: 'A', braille: [1], sound: 'sounds/A.mp3' },
+            { letter: 'B', braille: [1, 2], sound: 'sounds/B.mp3' },
+            { letter: 'C', braille: [1, 4], sound: 'sounds/C.mp3' },
+            { letter: 'D', braille: [1, 4, 5], sound: 'sounds/D.mp3' },
+            { letter: 'E', braille: [1, 5], sound: 'sounds/E.mp3' },
+            { letter: 'F', braille: [1, 2, 4], sound: 'sounds/F.mp3' },
+            { letter: 'G', braille: [1, 2, 4, 5], sound: 'sounds/G.mp3' },
+            { letter: 'H', braille: [1, 2, 5], sound: 'sounds/H.mp3' },
+            { letter: 'I', braille: [2, 4], sound: 'sounds/I.mp3' },
+            { letter: 'J', braille: [2, 4, 5], sound: 'sounds/J.mp3' },
+            { letter: 'K', braille: [1, 3], sound: 'sounds/K.mp3' },
+            { letter: 'L', braille: [1, 2, 3], sound: 'sounds/L.mp3' },
+            { letter: 'M', braille: [1, 3, 4], sound: 'sounds/M.mp3' },
+            { letter: 'N', braille: [1, 3, 4, 5], sound: 'sounds/N.mp3' },
+            { letter: 'O', braille: [1, 3, 5], sound: 'sounds/O.mp3' },
+            { letter: 'P', braille: [1, 2, 3, 4], sound: 'sounds/P.mp3' },
+            { letter: 'Q', braille: [1, 2, 3, 4, 5], sound: 'sounds/Q.mp3' },
+            { letter: 'R', braille: [1, 2, 3, 5], sound: 'sounds/R.mp3' },
+            { letter: 'S', braille: [2, 3, 4], sound: 'sounds/S.mp3' },
+            { letter: 'T', braille: [2, 3, 4, 5], sound: 'sounds/T.mp3' },
+            { letter: 'U', braille: [1, 3, 6], sound: 'sounds/U.mp3' },
+            { letter: 'V', braille: [1, 2, 3, 6], sound: 'sounds/V.mp3' },
+            { letter: 'W', braille: [2, 4, 5, 6], sound: 'sounds/W.mp3' },
+            { letter: 'X', braille: [1, 3, 4, 6], sound: 'sounds/X.mp3' },
+            { letter: 'Y', braille: [1, 3, 4, 5, 6], sound: 'sounds/Y.mp3' },
+            { letter: 'Z', braille: [1, 3, 5, 6], sound: 'sounds/Z.mp3' }
+        ];
+
+        let currentIndex = 0;
+
+        const letterDiv = document.getElementById('letter');
+        const dots = Array.from(document.getElementsByClassName('dot'));
+
+        function playSound(src) {
+            const audio = new Audio(src);
+            audio.play();
+        }
+
+        function updateBraille(braille) {
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active');
+                if (braille.includes(index + 1)) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+
+        function showNextLetter() {
+            if (currentIndex < alphabet.length) {
+                const { letter, braille, sound } = alphabet[currentIndex];
+                letterDiv.textContent = letter;
+                updateBraille(braille);
+                playSound(sound);
+                currentIndex++;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showNextLetter();
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key.toLowerCase() === 'j') {
+                showNextLetter();
+            }
+        });
+    </script>
+</body>
+</html>
