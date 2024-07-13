@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCQ Quiz</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #d3f9d8;
+            color: #0c0b0b;
+        }
+
+        .quiz-container {
+            text-align: center;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+
+        button {
+            margin: 10px;
+            padding: 15px 30px;
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #fff;
+            border: none;
+            color: #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        button.correct {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        button.incorrect {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1 id="question"></h1>
+        <div class="options">
+            <button class="option"></button>
+            <button class="option"></button>
+            <button class="option"></button>
+            <button class="option"></button>
+        </div>
+        <p id="score" style="display: none;"></p>
+    </div>
+    <script>
+        // Preload voices and select a human-like voice
+        let preferredVoice;
+        function loadVoices() {
+            const voices = window.speechSynthesis.getVoices();
+            preferredVoice = voices.find(voice => voice.name.includes('Google') || voice.name.includes('Microsoft') || voice.name.includes('Apple'));
+        }
+
+        if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+        } else {
+            loadVoices();
+        }
+
+        // Function to speak text using the preferred voice
+        function speakText(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.5;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Quiz data
+        const quizQuestions = [
+            {
+                question: "What is the capital of France?",
+                options: ["Berlin", "Madrid", "Paris", "Rome"],
+                correctAnswer: "Paris"
+            },
+            {
+                question: "What is the capital of Germany?",
+                options: ["Berlin", "Madrid", "Paris", "Rome"],
+                correctAnswer: "Berlin"
+            },
+            {
+                question: "What is the capital of Spain?",
+                options: ["Berlin", "Madrid", "Paris", "Rome"],
+                correctAnswer: "Madrid"
+            },
+            {
+                question: "What is the capital of Italy?",
+                options: ["Berlin", "Madrid", "Paris", "Rome"],
+                correctAnswer: "Rome"
+            },
+            {
+                question: "What is the capital of the United States?",
+                options: ["New York", "Los Angeles", "Washington, D.C.", "Chicago"],
+                correctAnswer: "Washington, D.C."
+            },
+            {
+                question: "What is the capital of Canada?",
+                options: ["Toronto", "Ottawa", "Vancouver", "Montreal"],
+                correctAnswer: "Ottawa"
+            },
+            {
+                question: "What is the capital of Australia?",
+                options: ["Sydney", "Melbourne", "Canberra", "Brisbane"],
+                correctAnswer: "Canberra"
+            },
+            {
+                question: "What is the capital of Japan?",
+                options: ["Tokyo", "Osaka", "Kyoto", "Nagoya"],
+                correctAnswer: "Tokyo"
+            },
+            {
+                question: "What is the capital of India?",
+                options: ["Mumbai", "Delhi", "Bangalore", "Kolkata"],
+                correctAnswer: "Delhi"
+            },
+            {
+                question: "What is the capital of Brazil?",
+                options: ["Rio de Janeiro", "São Paulo", "Brasília", "Salvador"],
+                correctAnswer: "Brasília"
+            },
+            {
+                question: "What is the capital of South Africa?",
+                options: ["Johannesburg", "Cape Town", "Pretoria", "Durban"],
+                correctAnswer: "Pretoria"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answerSelected = false;
+        let quizCompleted = false;
+
+        // Function to display a question
+        function displayQuestion() {
+            const questionElement = document.getElementById("question");
+            const optionButtons = document.querySelectorAll(".option");
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+
+            // Reset answer selected flag
+            answerSelected = false;
+
+            // Display and vocalize question
+            questionElement.innerText = currentQuestion.question;
+            speakText(currentQuestion.question);
+
+            // Display and vocalize options
+            optionButtons.forEach((button, index) => {
+                button.innerText = currentQuestion.options[index];
+                speakText(`Option ${index + 1}: ${currentQuestion.options[index]}`);
+
+                button.className = 'option'; // Reset button classes
+
+                button.onclick = () => {
+                    if (!answerSelected) {
+                        answerSelected = true;
+                        speakText(`${button.innerText} is selected`);
+                        setTimeout(() => {
+                            if (button.innerText === currentQuestion.correctAnswer) {
+                                speakText(`Correct answer: ${button.innerText}`);
+                                button.classList.add('correct');
+                                score++;
+                            } else {
+                                speakText(`Incorrect answer: ${button.innerText}`);
+                                button.classList.add('incorrect');
+                            }
+                        }, 500); // Delay for better user experience
+                    }
+                };
+
+                button.onmouseover = () => {
+                    speakText(button.innerText);
+                };
+            });
+
+            // Highlight the first button initially
+            optionButtons[0].focus();
+        }
+
+        // Navigation and selection logic
+        let currentIndex = 0;
+
+        document.addEventListener('keydown', (event) => {
+            const optionButtons = document.querySelectorAll(".option");
+
+            if (quizCompleted) return; // Prevent further actions after quiz completion
+
+            if (event.key === 'f') {
+                // Move backward
+                currentIndex = (currentIndex > 0) ? currentIndex - 1 : optionButtons.length - 1;
+                optionButtons[currentIndex].focus();
+                speakText(optionButtons[currentIndex].innerText);
+            } else if (event.key === 'j') {
+                // Move forward
+                currentIndex = (currentIndex < optionButtons.length - 1) ? currentIndex + 1 : 0;
+                optionButtons[currentIndex].focus();
+                speakText(optionButtons[currentIndex].innerText);
+            } else if (event.key === 'g') {
+                // Simulate button click
+                optionButtons[currentIndex].click();
+            } else if (event.key === 'h') {
+                // Move to the next question only if an answer has been selected
+                if (answerSelected) {
+                    if (currentQuestionIndex < quizQuestions.length - 1) {
+                        currentQuestionIndex++;
+                        displayQuestion();
+                    } else {
+                        // End the quiz and display the score
+                        speakText(`Quiz complete! You scored ${score} out of ${quizQuestions.length}.`);
+                        document.getElementById("question").innerText = "Quiz complete!";
+                        document.querySelector(".options").style.display = "none";
+                        const scoreElement = document.getElementById("score");
+                        scoreElement.style.display = "block";
+                        scoreElement.innerText = `Your score: ${score} out of ${quizQuestions.length}`;
+                        speakText(scoreElement.innerText);
+                        quizCompleted = true; // Mark the quiz as completed
+                    }
+                } else {
+                    speakText("Please select an answer before moving to the next question.");
+                }
+            }
+        });
+
+        // Start the quiz
+        displayQuestion();
+    </script>
+</body>
+</html>
